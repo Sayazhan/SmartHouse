@@ -14,7 +14,6 @@ import android.widget.ViewAnimator;
  * Furthermore, utility methods are provided for initiating fade-in-then-out and flip animations.
  *
  * @author Ephraim A. Tekle
- *
  */
 public class AnimationFactory {
 
@@ -22,7 +21,6 @@ public class AnimationFactory {
      * The {@code FlipDirection} enumeration defines the most typical flip view transitions: left-to-right and right-to-left. {@code FlipDirection} is used during the creation of {@link FlipAnimation} animations.
      *
      * @author Ephraim A. Tekle
-     *
      */
     public static enum FlipDirection {
         LEFT_RIGHT,
@@ -33,7 +31,7 @@ public class AnimationFactory {
         }
 
         public float getStartDegreeForSecondView() {
-            switch(this) {
+            switch (this) {
                 case LEFT_RIGHT:
                     return -90;
                 case RIGHT_LEFT:
@@ -44,7 +42,7 @@ public class AnimationFactory {
         }
 
         public float getEndDegreeForFirstView() {
-            switch(this) {
+            switch (this) {
                 case LEFT_RIGHT:
                     return 90;
                 case RIGHT_LEFT:
@@ -59,7 +57,7 @@ public class AnimationFactory {
         }
 
         public FlipDirection theOtherDirection() {
-            switch(this) {
+            switch (this) {
                 case LEFT_RIGHT:
                     return RIGHT_LEFT;
                 case RIGHT_LEFT:
@@ -68,18 +66,20 @@ public class AnimationFactory {
                     return null;
             }
         }
-    };
+    }
+
+    ;
 
 
     /**
      * Create a pair of {@link FlipAnimation} that can be used to flip 3D transition from {@code fromView} to {@code toView}. A typical use case is with {@link ViewAnimator} as an out and in transition.
-     *
+     * <p/>
      * NOTE: Avoid using this method. Instead, use {@link #flipTransition}.
      *
-     * @param fromView the view transition away from
-     * @param toView the view transition to
-     * @param dir the flip direction
-     * @param duration the transition duration in milliseconds
+     * @param fromView     the view transition away from
+     * @param toView       the view transition to
+     * @param dir          the flip direction
+     * @param duration     the transition duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return
      */
@@ -91,10 +91,10 @@ public class AnimationFactory {
         centerX = fromView.getWidth() / 2.0f;
         centerY = fromView.getHeight() / 2.0f;
 
-        Animation outFlip= new FlipAnimation(dir.getStartDegreeForFirstView(), dir.getEndDegreeForFirstView(), centerX, centerY, FlipAnimation.SCALE_DEFAULT, FlipAnimation.ScaleUpDownEnum.SCALE_DOWN);
+        Animation outFlip = new FlipAnimation(dir.getStartDegreeForFirstView(), dir.getEndDegreeForFirstView(), centerX, centerY, FlipAnimation.SCALE_DEFAULT, FlipAnimation.ScaleUpDownEnum.SCALE_DOWN);
         outFlip.setDuration(duration);
         outFlip.setFillAfter(true);
-        outFlip.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        outFlip.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
 
         AnimationSet outAnimation = new AnimationSet(true);
         outAnimation.addAnimation(outFlip);
@@ -107,7 +107,7 @@ public class AnimationFactory {
         Animation inFlip = new FlipAnimation(dir.getStartDegreeForSecondView(), dir.getEndDegreeForSecondView(), centerX, centerY, FlipAnimation.SCALE_DEFAULT, FlipAnimation.ScaleUpDownEnum.SCALE_UP);
         inFlip.setDuration(duration);
         inFlip.setFillAfter(true);
-        inFlip.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        inFlip.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         inFlip.setStartOffset(duration);
 
         AnimationSet inAnimation = new AnimationSet(true);
@@ -123,17 +123,17 @@ public class AnimationFactory {
      * If the currently visible view is the last view, flip direction will be reversed for this transition.
      *
      * @param viewAnimator the {@code ViewAnimator}
-     * @param dir the direction of flip
+     * @param dir          the direction of flip
      */
     public static void flipTransition(final ViewAnimator viewAnimator, FlipDirection dir) {
 
         final View fromView = viewAnimator.getCurrentView();
         final int currentIndex = viewAnimator.getDisplayedChild();
-        final int nextIndex = (currentIndex + 1)%viewAnimator.getChildCount();
+        final int nextIndex = (currentIndex + 1) % viewAnimator.getChildCount();
 
         final View toView = viewAnimator.getChildAt(nextIndex);
 
-        Animation[] animc = Animation.AnimationFactory.flipAnimation(fromView, toView, (nextIndex < currentIndex ? dir.theOtherDirection() : dir), 500, null);
+        Animation[] animc = AnimationFactory.flipAnimation(fromView, toView, (nextIndex < currentIndex ? dir.theOtherDirection() : dir), 500, null);
 
         viewAnimator.setOutAnimation(animc[0]);
         viewAnimator.setInAnimation(animc[1]);
@@ -147,103 +147,103 @@ public class AnimationFactory {
     /**
      * Slide animations to enter a view from left.
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation inFromLeftAnimation(long duration, Interpolator interpolator) {
         Animation inFromLeft = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  -1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+                Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f
         );
         inFromLeft.setDuration(duration);
-        inFromLeft.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator); //AccelerateInterpolator
+        inFromLeft.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator); //AccelerateInterpolator
         return inFromLeft;
     }
 
     /**
      * Slide animations to hide a view by sliding it to the right
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation outToRightAnimation(long duration, Interpolator interpolator) {
         Animation outtoRight = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  +1.0f,
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, +1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f
         );
         outtoRight.setDuration(duration);
-        outtoRight.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        outtoRight.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         return outtoRight;
     }
 
     /**
      * Slide animations to enter a view from right.
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation inFromRightAnimation(long duration, Interpolator interpolator) {
 
         Animation inFromRight = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  +1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+                Animation.RELATIVE_TO_PARENT, +1.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f
         );
         inFromRight.setDuration(duration);
-        inFromRight.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        inFromRight.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         return inFromRight;
     }
 
     /**
      * Slide animations to hide a view by sliding it to the left.
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation outToLeftAnimation(long duration, Interpolator interpolator) {
         Animation outtoLeft = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  -1.0f,
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f
         );
         outtoLeft.setDuration(duration);
-        outtoLeft.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        outtoLeft.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         return outtoLeft;
     }
 
     /**
      * Slide animations to enter a view from top.
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation inFromTopAnimation(long duration, Interpolator interpolator) {
         Animation infromtop = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
                 Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f
         );
         infromtop.setDuration(duration);
-        infromtop.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        infromtop.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         return infromtop;
     }
 
     /**
      * Slide animations to hide a view by sliding it to the top
      *
-     * @param duration the animation duration in milliseconds
+     * @param duration     the animation duration in milliseconds
      * @param interpolator the interpolator to use (pass {@code null} to use the {@link AccelerateInterpolator} interpolator)
      * @return a slide transition animation
      */
     public static Animation outToTopAnimation(long duration, Interpolator interpolator) {
         Animation outtotop = new TranslateAnimation(
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-                Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT, -1.0f
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f
         );
         outtotop.setDuration(duration);
-        outtotop.setInterpolator(interpolator==null?new AccelerateInterpolator():interpolator);
+        outtotop.setInterpolator(interpolator == null ? new AccelerateInterpolator() : interpolator);
         return outtotop;
     }
 
@@ -251,7 +251,7 @@ public class AnimationFactory {
      * A fade animation that will fade the subject in by changing alpha from 0 to 1.
      *
      * @param duration the animation duration in milliseconds
-     * @param delay how long to wait before starting the animation, in milliseconds
+     * @param delay    how long to wait before starting the animation, in milliseconds
      * @return a fade animation
      * @see #fadeInAnimation(View, long)
      */
@@ -269,7 +269,7 @@ public class AnimationFactory {
      * A fade animation that will fade the subject out by changing alpha from 1 to 0.
      *
      * @param duration the animation duration in milliseconds
-     * @param delay how long to wait before starting the animation, in milliseconds
+     * @param delay    how long to wait before starting the animation, in milliseconds
      * @return a fade animation
      * @see #fadeOutAnimation(View, long)
      */
@@ -285,7 +285,8 @@ public class AnimationFactory {
 
     /**
      * A fade animation that will ensure the View starts and ends with the correct visibility
-     * @param view the View to be faded in
+     *
+     * @param view     the View to be faded in
      * @param duration the animation duration in milliseconds
      * @return a fade animation that will set the visibility of the view at the start and end of animation
      */
@@ -313,7 +314,8 @@ public class AnimationFactory {
 
     /**
      * A fade animation that will ensure the View starts and ends with the correct visibility
-     * @param view the View to be faded out
+     *
+     * @param view     the View to be faded out
      * @param duration the animation duration in milliseconds
      * @return a fade animation that will set the visibility of the view at the start and end of animation
      */
@@ -343,44 +345,48 @@ public class AnimationFactory {
 
     /**
      * Creates a pair of animation that will fade in, delay, then fade out
+     *
      * @param duration the animation duration in milliseconds
-     * @param delay how long to wait after fading in the subject and before starting the fade out
+     * @param delay    how long to wait after fading in the subject and before starting the fade out
      * @return a fade in then out animations
      */
     public static Animation[] fadeInThenOutAnimation(long duration, long delay) {
-        return new Animation[] {fadeInAnimation(duration,0), fadeOutAnimation(duration, duration+delay)};
+        return new Animation[]{fadeInAnimation(duration, 0), fadeOutAnimation(duration, duration + delay)};
     }
 
     /**
      * Fades the view in. Animation starts right away.
+     *
      * @param v the view to be faded in
      */
     public static void fadeOut(View v) {
-        if (v==null) return;
+        if (v == null) return;
         v.startAnimation(fadeOutAnimation(10000, v));
     }
 
     /**
      * Fades the view out. Animation starts right away.
+     *
      * @param v the view to be faded out
      */
     public static void fadeIn(View v) {
-        if (v==null) return;
+        if (v == null) return;
 
         v.startAnimation(fadeInAnimation(5000, v));
     }
 
     /**
      * Fades the view in, delays the specified amount of time, then fades the view out
-     * @param v the view to be faded in then out
+     *
+     * @param v     the view to be faded in then out
      * @param delay how long the view will be visible for
      */
     public static void fadeInThenOut(final View v, long delay) {
-        if (v==null) return;
+        if (v == null) return;
 
         v.setVisibility(View.VISIBLE);
         AnimationSet animation = new AnimationSet(true);
-        Animation[] fadeInOut = fadeInThenOutAnimation(500,delay);
+        Animation[] fadeInOut = fadeInThenOutAnimation(500, delay);
         animation.addAnimation(fadeInOut[0]);
         animation.addAnimation(fadeInOut[1]);
         animation.setAnimationListener(new AnimationListener() {
@@ -388,9 +394,11 @@ public class AnimationFactory {
             public void onAnimationEnd(Animation animation) {
                 v.setVisibility(View.GONE);
             }
+
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
+
             @Override
             public void onAnimationStart(Animation animation) {
                 v.setVisibility(View.VISIBLE);

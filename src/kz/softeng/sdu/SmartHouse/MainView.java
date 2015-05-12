@@ -30,23 +30,27 @@ public class MainView extends Activity implements RecognitionListener {
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
 
+    private boolean svet = false, electro = false, cleanhouse = false, garage = false, doors = false, security = false;
+
     private ViewAnimator viewAnimator, viewAnimator1, viewAnimator2, viewAnimator3, viewAnimator4, viewAnimator5, viewAnimator6, viewAnimator7;
 
     private ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6, imageView7, imageView8, imageView9,
             imageView10, imageView11, imageView12, imageView13, imageView14, imageView15, imageView16;
 
-    private boolean hello=true;
+    private String[] snew, knew;
+
+    private boolean hello = true;
 
     @Override
-    public void onCreate(Bundle savedInstateState){
+    public void onCreate(Bundle savedInstateState) {
         super.onCreate(savedInstateState);
         setContentView(R.layout.view);
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
         recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE,"en");
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,this.getPackageName());
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
 
@@ -56,9 +60,9 @@ public class MainView extends Activity implements RecognitionListener {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 System.out.println("HELLO:     ssss");
-                if(hello){
+                if (hello) {
                     speech.startListening(recognizerIntent);
-                    hello=false;
+                    hello = false;
                 }
 
 //                Toast.makeText(getApplication(), "Touch coordinates : " +
@@ -68,41 +72,41 @@ public class MainView extends Activity implements RecognitionListener {
         });
 
 
-        viewAnimator = (ViewAnimator)this.findViewById(R.id.viewFlipper);
-        viewAnimator1 = (ViewAnimator)this.findViewById(R.id.viewFlipper1);
-        viewAnimator2 = (ViewAnimator)this.findViewById(R.id.viewFlipper2);
-        viewAnimator3 = (ViewAnimator)this.findViewById(R.id.viewFlipper3);
-        viewAnimator4 = (ViewAnimator)this.findViewById(R.id.viewFlipper4);
-        viewAnimator5 = (ViewAnimator)this.findViewById(R.id.viewFlipper5);
-        viewAnimator6 = (ViewAnimator)this.findViewById(R.id.viewFlipper6);
-        viewAnimator7 = (ViewAnimator)this.findViewById(R.id.viewFlipper7);
+        viewAnimator = (ViewAnimator) this.findViewById(R.id.viewFlipper);
+        viewAnimator1 = (ViewAnimator) this.findViewById(R.id.viewFlipper1);
+        viewAnimator2 = (ViewAnimator) this.findViewById(R.id.viewFlipper2);
+        viewAnimator3 = (ViewAnimator) this.findViewById(R.id.viewFlipper3);
+        viewAnimator4 = (ViewAnimator) this.findViewById(R.id.viewFlipper4);
+        viewAnimator5 = (ViewAnimator) this.findViewById(R.id.viewFlipper5);
+        viewAnimator6 = (ViewAnimator) this.findViewById(R.id.viewFlipper6);
+        viewAnimator7 = (ViewAnimator) this.findViewById(R.id.viewFlipper7);
 
-        imageView1 = (ImageView)this.findViewById(R.id.imageView1);
-        imageView2 = (ImageView)this.findViewById(R.id.imageView2);
+        imageView1 = (ImageView) this.findViewById(R.id.imageView1);
+        imageView2 = (ImageView) this.findViewById(R.id.imageView2);
 
-        imageView3 = (ImageView)this.findViewById(R.id.imageView3);
-        imageView4 = (ImageView)this.findViewById(R.id.imageView4);
+        imageView3 = (ImageView) this.findViewById(R.id.imageView3);
+        imageView4 = (ImageView) this.findViewById(R.id.imageView4);
 
-        imageView5 = (ImageView)this.findViewById(R.id.imageView5);
-        imageView6 = (ImageView)this.findViewById(R.id.imageView6);
+        imageView5 = (ImageView) this.findViewById(R.id.imageView5);
+        imageView6 = (ImageView) this.findViewById(R.id.imageView6);
 
-        imageView7 = (ImageView)this.findViewById(R.id.imageView7);
-        imageView8 = (ImageView)this.findViewById(R.id.imageView8);
+        imageView7 = (ImageView) this.findViewById(R.id.imageView7);
+        imageView8 = (ImageView) this.findViewById(R.id.imageView8);
 
-        imageView9 = (ImageView)this.findViewById(R.id.imageView9);
-        imageView10 = (ImageView)this.findViewById(R.id.imageView10);
+        imageView9 = (ImageView) this.findViewById(R.id.imageView9);
+        imageView10 = (ImageView) this.findViewById(R.id.imageView10);
 
-        imageView11 = (ImageView)this.findViewById(R.id.imageView11);
-        imageView12 = (ImageView)this.findViewById(R.id.imageView12);
+        imageView11 = (ImageView) this.findViewById(R.id.imageView11);
+        imageView12 = (ImageView) this.findViewById(R.id.imageView12);
 
-        imageView13 = (ImageView)this.findViewById(R.id.imageView13);
-        imageView14 = (ImageView)this.findViewById(R.id.imageView14);
+        imageView13 = (ImageView) this.findViewById(R.id.imageView13);
+        imageView14 = (ImageView) this.findViewById(R.id.imageView14);
 
-        imageView15 = (ImageView)this.findViewById(R.id.imageView15);
-        imageView16 = (ImageView)this.findViewById(R.id.imageView16);
+        imageView15 = (ImageView) this.findViewById(R.id.imageView15);
+        imageView16 = (ImageView) this.findViewById(R.id.imageView16);
 
 
-        View.OnClickListener listener = new View.OnClickListener(){
+        View.OnClickListener listener = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -110,7 +114,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener1 = new View.OnClickListener(){
+        View.OnClickListener listener1 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -118,7 +122,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener2 = new View.OnClickListener(){
+        View.OnClickListener listener2 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -126,7 +130,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener3 = new View.OnClickListener(){
+        View.OnClickListener listener3 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -134,7 +138,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener4 = new View.OnClickListener(){
+        View.OnClickListener listener4 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -142,7 +146,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener5 = new View.OnClickListener(){
+        View.OnClickListener listener5 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -150,7 +154,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener6 = new View.OnClickListener(){
+        View.OnClickListener listener6 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -158,7 +162,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             }
         };
-        View.OnClickListener listener7 = new View.OnClickListener(){
+        View.OnClickListener listener7 = new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -227,23 +231,91 @@ public class MainView extends Activity implements RecognitionListener {
         text = matches.get(0);
 
         System.out.println("This is text: " + text);
+        snew = new String[10];
+        knew = new String[10];
 
-        if(text.equals("1")){
-            AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("2")){
-            AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("3")){
-            AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("4")){
-            AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("5")){
-            AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("6")){
-            AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("7")){
-            AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-        }else if(text.equals("8")){
-            AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+        snew = text.split(" ");
+        for (int i = 0; i < snew.length; i++) {
+            knew[i] = snew[i];
+        }
+        if (snew.length == 2) {
+            knew[2] = "";
+        }
+//        System.out.println("This is s: "+s);
+//        System.out.println("This is s: "+s[0]);
+//        System.out.println("This is s: "+s[1]);
+        if (knew[2].equals("light")) {
+            System.out.println("Find svet");
+            if (knew[1].equals("off") && svet) {
+                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
+                svet = false;
+            } else if (knew[1].equals("on") && !svet) {
+                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
+                svet = true;
+            }
+        } else if (knew[2].equals("watts")) {
+            System.out.println("Find electro");
+            if (knew[1].equals("off") && electro) {
+                AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
+                electro = false;
+            } else if (knew[1].equals("on") && !electro) {
+                AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
+                electro = true;
+            }
+        } else if (knew[1].equals("house")) {
+            System.out.println("Find electro");
+            if (knew[2].equals("off") && cleanhouse) {
+                AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
+                cleanhouse = false;
+            } else if (knew[2].equals("on") && !cleanhouse) {
+                AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
+                cleanhouse = true;
+            }
+        } else if (knew[1].equals("garage")) {
+            System.out.println("Find garrage");
+            if (knew[0].equals("close") && garage) {
+                AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
+                garage = false;
+            } else if (knew[0].equals("open") && !garage) {
+                AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
+                garage = true;
+            }
+        } else if (knew[2].equals("doors")) {
+            System.out.println("Find doors");
+            if (knew[0].equals("lock") && doors) {
+                AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                doors = false;
+            } else if (knew[0].equals("open") && !doors) {
+                AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                doors = true;
+            }
+        } else if (knew[2].equals("security")) {
+            System.out.println("Find security");
+            if (knew[1].equals("off") && security) {
+                AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                security = false;
+            } else if (knew[1].equals("on") && !security) {
+                AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                security = true;
+            }
+        } else if (knew[2].equals("watts")) {
+            System.out.println("Find electro");
+            if (knew[1].equals("off") && electro) {
+                AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                electro = false;
+            } else if (knew[1].equals("on") && !electro) {
+                AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                electro = true;
+            }
+        } else if (knew[2].equals("watts")) {
+            System.out.println("Find electro");
+            if (knew[1].equals("off") && electro) {
+                AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                electro = false;
+            } else if (knew[1].equals("on") && !electro) {
+                AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                electro = true;
+            }
         }
         return;
     }
@@ -261,11 +333,11 @@ public class MainView extends Activity implements RecognitionListener {
             System.out.println("Method: onPause");
         }
     }
+
     @Override
     public void onEndOfSpeech() {
         speech.stopListening();
-        hello=true;
-
+        hello = true;
         System.out.println("Method: stopListening");
     }
 
@@ -276,32 +348,42 @@ public class MainView extends Activity implements RecognitionListener {
         speech.stopListening();
 
         speech.destroy();
-        hello=true;
+        hello = true;
 
         System.out.println("Method: onError");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        speech.destroy();
+    }
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
 
     }
+
     @Override
     public void onBeginningOfSpeech() {
 
     }
+
     @Override
     public void onRmsChanged(float v) {
 
     }
+
     @Override
     public void onBufferReceived(byte[] bytes) {
 
     }
+
     @Override
     public void onPartialResults(Bundle bundle) {
 
     }
+
     @Override
     public void onEvent(int i, Bundle bundle) {
 

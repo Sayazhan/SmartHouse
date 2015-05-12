@@ -8,11 +8,10 @@ import android.view.animation.Transformation;
 /**
  * This class extends Animation to support a 3D flip view transition animation. Two instances of this class is
  * required: one for the "from" view and another for the "to" view.
- *
+ * <p/>
  * NOTE: use {@link Animation.AnimationFactory} to use this class.
  *
- *  @author Ephraim A. Tekle
- *
+ * @author Ephraim A. Tekle
  */
 public class FlipAnimation extends Animation {
     private final float mFromDegrees;
@@ -34,19 +33,19 @@ public class FlipAnimation extends Animation {
      * Constructs a new {@code FlipAnimation} object.Two {@code FlipAnimation} objects are needed for a complete transition b/n two views.
      *
      * @param fromDegrees the start angle in degrees for a rotation along the y-axis, i.e. in-and-out of the screen, i.e. 3D flip. This should really be multiple of 90 degrees.
-     * @param toDegrees the end angle in degrees for a rotation along the y-axis, i.e. in-and-out of the screen, i.e. 3D flip. This should really be multiple of 90 degrees.
-     * @param centerX the x-axis value of the center of rotation
-     * @param centerY the y-axis value of the center of rotation
-     * @param scale to get a 3D effect, the transition views need to be zoomed (scaled). This value must be b/n (0,1) or else the default scale {@link #SCALE_DEFAULT} is used.
-     * @param scaleType flip view transition is broken down into two: the zoom-out of the "from" view and the zoom-in of the "to" view. This parameter is used to determine which is being done. See {@link ScaleUpDownEnum}.
+     * @param toDegrees   the end angle in degrees for a rotation along the y-axis, i.e. in-and-out of the screen, i.e. 3D flip. This should really be multiple of 90 degrees.
+     * @param centerX     the x-axis value of the center of rotation
+     * @param centerY     the y-axis value of the center of rotation
+     * @param scale       to get a 3D effect, the transition views need to be zoomed (scaled). This value must be b/n (0,1) or else the default scale {@link #SCALE_DEFAULT} is used.
+     * @param scaleType   flip view transition is broken down into two: the zoom-out of the "from" view and the zoom-in of the "to" view. This parameter is used to determine which is being done. See {@link ScaleUpDownEnum}.
      */
     public FlipAnimation(float fromDegrees, float toDegrees, float centerX, float centerY, float scale, ScaleUpDownEnum scaleType) {
         mFromDegrees = fromDegrees;
         mToDegrees = toDegrees;
         mCenterX = centerX;
         mCenterY = centerY;
-        this.scale = (scale<=0||scale>=1)?SCALE_DEFAULT:scale;
-        this.scaleType = scaleType==null? ScaleUpDownEnum.SCALE_CYCLE:scaleType;
+        this.scale = (scale <= 0 || scale >= 1) ? SCALE_DEFAULT : scale;
+        this.scaleType = scaleType == null ? ScaleUpDownEnum.SCALE_CYCLE : scaleType;
     }
 
     @Override
@@ -85,7 +84,6 @@ public class FlipAnimation extends Animation {
      * This enumeration is used to determine the zoom (or scale) behavior of a {@link Animation.FlipAnimation}.
      *
      * @author Ephraim A. Tekle
-     *
      */
     public static enum ScaleUpDownEnum {
         /**
@@ -108,25 +106,25 @@ public class FlipAnimation extends Animation {
         /**
          * The intermittent zoom level given the current or desired maximum zoom level for the specified iteration
          *
-         * @param max the maximum desired or current zoom level
+         * @param max  the maximum desired or current zoom level
          * @param iter the iteration (from 0..1).
          * @return the current zoom level
          */
         public float getScale(float max, float iter) {
-            switch(this) {
+            switch (this) {
                 case SCALE_UP:
-                    return max +  (1-max)*iter;
+                    return max + (1 - max) * iter;
 
                 case SCALE_DOWN:
-                    return 1 - (1-max)*iter;
+                    return 1 - (1 - max) * iter;
 
                 case SCALE_CYCLE: {
                     final boolean halfWay = (iter > 0.5);
 
                     if (halfWay) {
-                        return max +  (1-max)*(iter-0.5f)*2;
+                        return max + (1 - max) * (iter - 0.5f) * 2;
                     } else {
-                        return 1 - (1-max)*(iter*2);
+                        return 1 - (1 - max) * (iter * 2);
                     }
                 }
 
