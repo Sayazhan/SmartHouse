@@ -2,10 +2,7 @@ package kz.softeng.sdu.SmartHouse;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -15,13 +12,14 @@ import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import Animation.AnimationFactory.*;
 import Animation.AnimationFactory;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.*;
 
@@ -29,7 +27,7 @@ import java.util.*;
  * Created by Sayazhan on 06.05.2015.
  */
 
-public class MainActivity extends Activity implements RecognitionListener {
+public class MainActivity extends Activity  {
     /**
      * Called when the activity is first created.
      */
@@ -39,8 +37,10 @@ public class MainActivity extends Activity implements RecognitionListener {
     private boolean bnewauto = false, blogin = false, bpassword = false;
     private static TextToSpeech tts;
 
-    private static SpeechRecognizer speech = null;
-    private static Intent recognizerIntent;
+    private String[] text1, text2;
+    private String parseusername, parsepassword;
+
+    private final int REQ_CODE_SPEECH_INPUT = 100;
 
     private static boolean isSpeaking = false;
 
@@ -50,9 +50,11 @@ public class MainActivity extends Activity implements RecognitionListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-//        if(!isSpeaking && !firsttime){
-//            speech.startListening(recognizerIntent);
-//        }
+        getActionBar().hide();
+
+        //connect to Parse.com
+        Parse.initialize(this, "toOhhrlCZ9Gds2sX1JW55Z2r71JIoFiWr6eRba8A",
+                "PlM3Q4Q1EslwcualVJlJdgCTtJTk3bfvCUF9own0");
 
         tts = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
 
@@ -70,75 +72,114 @@ public class MainActivity extends Activity implements RecognitionListener {
                     } else if (bnewauto == false) {
                         tts.speak("Hello! Do you want to autorizise?", TextToSpeech.QUEUE_FLUSH, map);
                         bnewauto = true;
-                        tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                            @Override
-                            public void onStart(String s) {
-                                System.out.println("Hello is started");
-                                isSpeaking = true;
-                            }
-
-                            @Override
-                            public void onDone(String s) {
-                                System.out.println("Hello is finished");
-                                tts.shutdown();
-                                isSpeaking = false;
-                                firsttime = false;
-                            }
-
-                            @Override
-                            public void onError(String s) {
-                                System.out.println("Hello is error");
-                            }
-                        });
                     }
                 }
-
             }
         });
-        speech = SpeechRecognizer.createSpeechRecognizer(this);
-        speech.setRecognitionListener(this);
-        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
-        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
 
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
 
-        //touch screen
-        final View touchView = findViewById(R.id.login_form);
-        touchView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                //if (!isSpeaking && !firsttime) {
-                speech.startListening(recognizerIntent);
-                //}
-                return true;
-
-            }
-        });
         //button onclick
         Button btn = (Button) findViewById(R.id.btn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 startActivity(new Intent(getApplication(), MainView.class));
             }
         });
+        ImageButton btn1 = (ImageButton) findViewById(R.id.btnSpeak);
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
     }
-
-    @Override
-    public void onResults(Bundle results) {
-        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String text = "";
-        text = matches.get(0);
-        System.out.println("This is text: " + text);
-        if (text == "yes") {
-            startActivity(new Intent(getApplication(), MainView.class));
+    private void promptSpeechInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
         }
+    }
+    /**
+     * Receiving speech input
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        text1 = new String[100];
+        text2 = new String[100];
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    String text = "";
+                    text = matches.get(0);
+
+                    System.out.println("This is text: " + text);
+                    if (text.equals("yes")) {
+                        startActivity(new Intent(getApplication(), MainView.class));
+                    }else if ((text.contains("username") || text.contains("user name")) && (text.contains("password")||text.contains("passwords"))){
+                        System.out.println("username and password found!!!");
+                        text1 = text.split(" ");
+                        for(int i=0; i<text1.length;i++){
+                            if(text1[i].equals("username")){
+                                parseusername=text1[i+2];
+                                username.setText(text1[i+2]);
+                            }else if(text1[i].equals("user")){
+                                parseusername=text1[i+3];
+                                username.setText(text1[i+3]);
+                            }
+                            if(text1[i].equals("password") || text1[i].equals("passwords") && text1.length==i+2){
+                                parsepassword = text1[i+1];
+                                password.setText(text1[i+1]);
+                            }
+                        }
+                     }
+                }
+                break;
+            }
+        }
+        //progressdialog
+        final ProgressDialog dlg = new ProgressDialog(
+                MainActivity.this);
+        dlg.setTitle("Please wait");
+        dlg.setMessage("Logging in. Please wait.");
+        dlg.show();
+        //check do we have this user
+        ParseUser.logInInBackground(username.getText()
+                        .toString(), password.getText().toString(),
+                new LogInCallback() {
+                    @Override
+                    public void done(ParseUser user, ParseException e) {
+                        dlg.dismiss();
+                        if (e != null) {
+                            Toast.makeText(MainActivity.this,
+                                    e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+
+                            Intent intent = new Intent(
+                                    MainActivity.this,
+                                    MainView.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -149,100 +190,13 @@ public class MainActivity extends Activity implements RecognitionListener {
     @Override
     protected void onPause() {
         super.onPause();
-        if (speech != null) {
-            speech.destroy();
-            System.out.println("Method: onPause");
-        }
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-        speech.stopListening();
-        System.out.println("Method: stopListening");
+        System.out.println("Method: onPause");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        speech.destroy();
         tts.shutdown(); //mTts is your TextToSpeech Object
-    }
-
-    @Override
-    public void onError(int i) {
-        String errorMessage = getErrorText(i);
-        Toast.makeText(getApplication(), "ERROR" + errorMessage, Toast.LENGTH_SHORT).show();
-        speech.stopListening();
-        speech.destroy();
-        System.out.println("Method: onError");
-        speech.startListening(recognizerIntent);
-    }
-
-    @Override
-    public void onReadyForSpeech(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-
-    }
-
-    @Override
-    public void onRmsChanged(float v) {
-
-    }
-
-    @Override
-    public void onBufferReceived(byte[] bytes) {
-
-    }
-
-    @Override
-    public void onPartialResults(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onEvent(int i, Bundle bundle) {
-
-    }
-
-    public static String getErrorText(int errorCode) {
-        String message;
-        switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO:
-                message = "Audio recording error";
-                break;
-            case SpeechRecognizer.ERROR_CLIENT:
-                message = "Client side error";
-                break;
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                message = "Insufficient permissions";
-                break;
-            case SpeechRecognizer.ERROR_NETWORK:
-                message = "Network error";
-                break;
-            case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                message = "Network timeout";
-                break;
-            case SpeechRecognizer.ERROR_NO_MATCH:
-                message = "No match";
-                break;
-            case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                message = "RecognitionService busy";
-                break;
-            case SpeechRecognizer.ERROR_SERVER:
-                message = "error from server";
-                break;
-            case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                message = "No speech input";
-                break;
-            default:
-                message = "Didn't understand, please try again.";
-                break;
-        }
-        return message;
     }
 
 }
