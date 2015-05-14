@@ -238,85 +238,86 @@ public class MainView extends Activity implements RecognitionListener {
         for (int i = 0; i < snew.length; i++) {
             knew[i] = snew[i];
         }
-        if (snew.length == 2) {
-            knew[2] = "";
-        }
-//        System.out.println("This is s: "+s);
-//        System.out.println("This is s: "+s[0]);
-//        System.out.println("This is s: "+s[1]);
-        if (knew[2].equals("light")) {
-            System.out.println("Find svet");
-            if (knew[1].equals("off") && svet) {
-                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
-                svet = false;
-            } else if (knew[1].equals("on") && !svet) {
-                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
-                svet = true;
-            }
-        } else if (knew[2].equals("watts")) {
-            System.out.println("Find electro");
-            if (knew[1].equals("off") && electro) {
-                AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
-                electro = false;
-            } else if (knew[1].equals("on") && !electro) {
-                AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
-                electro = true;
-            }
-        } else if (knew[1].equals("house")) {
-            System.out.println("Find electro");
-            if (knew[2].equals("off") && cleanhouse) {
-                AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
-                cleanhouse = false;
-            } else if (knew[2].equals("on") && !cleanhouse) {
-                AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
-                cleanhouse = true;
-            }
-        } else if (knew[1].equals("garage")) {
-            System.out.println("Find garrage");
-            if (knew[0].equals("close") && garage) {
-                AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
-                garage = false;
-            } else if (knew[0].equals("open") && !garage) {
-                AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
-                garage = true;
-            }
-        } else if (knew[2].equals("doors")) {
-            System.out.println("Find doors");
-            if (knew[0].equals("lock") && doors) {
-                AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
-                doors = false;
-            } else if (knew[0].equals("open") && !doors) {
-                AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
-                doors = true;
-            }
-        } else if (knew[2].equals("security")) {
-            System.out.println("Find security");
-            if (knew[1].equals("off") && security) {
-                AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
-                security = false;
-            } else if (knew[1].equals("on") && !security) {
-                AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
-                security = true;
-            }
-        } else if (knew[2].equals("watts")) {
-            System.out.println("Find electro");
-            if (knew[1].equals("off") && electro) {
-                AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                electro = false;
-            } else if (knew[1].equals("on") && !electro) {
-                AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                electro = true;
-            }
-        } else if (knew[2].equals("watts")) {
-            System.out.println("Find electro");
-            if (knew[1].equals("off") && electro) {
-                AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                electro = false;
-            } else if (knew[1].equals("on") && !electro) {
-                AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                electro = true;
-            }
-        }
+         if (snew.length>=4){
+            Toast.makeText(getApplication(), "Error", Toast.LENGTH_SHORT).show();
+        }else {
+             if(snew.length==3){
+                 knew[2]="";
+             }
+             if (knew[2].equals("light")) {
+                 System.out.println("Find svet");
+                 if (knew[1].equals("off") && svet) {
+                     AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
+                     svet = false;
+                 } else if (knew[1].equals("on") && !svet) {
+                     AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
+                     svet = true;
+                 }
+             } else if (knew[2].equals("devices")) {
+                 System.out.println("Find electro");
+                 if (knew[1].equals("off") && electro) {
+                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
+                     electro = false;
+                 } else if (knew[1].equals("on") && !electro) {
+                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
+                     electro = true;
+                 }
+             } else if (knew[1].equals("house")) {
+                 System.out.println("Find electro");
+                 if (knew[2].equals("off") && cleanhouse) {
+                     AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
+                     cleanhouse = false;
+                 } else if (knew[2].equals("on") && !cleanhouse) {
+                     AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
+                     cleanhouse = true;
+                 }
+             } else if (knew[1].equals("garage")) {
+                 System.out.println("Find garrage");
+                 if (knew[0].equals("close") && garage) {
+                     AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
+                     garage = false;
+                 } else if (knew[0].equals("open") && !garage) {
+                     AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
+                     garage = true;
+                 }
+             } else if (knew[2].equals("doors")) {
+                 System.out.println("Find doors");
+                 if (knew[0].equals("lock") && doors) {
+                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     doors = false;
+                 } else if (knew[0].equals("open") && !doors) {
+                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     doors = true;
+                 }
+             } else if (knew[2].equals("security")) {
+                 System.out.println("Find security");
+                 if (knew[1].equals("off") && security) {
+                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                     security = false;
+                 } else if (knew[1].equals("on") && !security) {
+                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                     security = true;
+                 }
+             } else if (knew[2].equals("wifi")) {
+                 System.out.println("Find electro");
+                 if (knew[1].equals("off") && electro) {
+                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                     electro = false;
+                 } else if (knew[1].equals("on") && !electro) {
+                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                     electro = true;
+                 }
+             } else if (knew[2].equals("watts")) {
+                 System.out.println("Find electro");
+                 if (knew[1].equals("off") && electro) {
+                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                     electro = false;
+                 } else if (knew[1].equals("on") && !electro) {
+                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                     electro = true;
+                 }
+             }
+         }
         return;
     }
 

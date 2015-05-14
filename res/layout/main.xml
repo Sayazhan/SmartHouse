@@ -7,7 +7,7 @@
     <LinearLayout
             style="@style/LoginFormContainer"
             android:orientation="vertical"
-            >
+            android:weightSum="1">
 
         <EditText
                 android:id="@+id/username"
@@ -16,18 +16,22 @@
                 android:hint="Username"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:singleLine="true"/>
+                android:background="@null"
+                android:singleLine="true" android:layout_weight="0.64"
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp"/>
 
         <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-
+                android:background="@null"
                 android:imeOptions="actionUnspecified"
                 android:inputType="textPassword"
                 android:maxLines="1"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                android:paddingTop="10dp"/>
 
         <Button
                 android:id="@+id/btn"
@@ -35,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:text="Hello"
+                android:background="@null"
                 />
     </LinearLayout>
 
