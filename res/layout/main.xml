@@ -1,50 +1,79 @@
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-       xmlns:tools="http://schemas.android.com/tools"
-       tools:context=".LoginActivity"
-        >
-
-    <!-- Login form -->
-
-    <ScrollView
-            android:id="@+id/login_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_gradient"
+                android:orientation="vertical" >
+    <LinearLayout
+            style="@style/LoginFormContainer"
+            android:orientation="vertical"
             >
 
-        <LinearLayout
-                style="@style/LoginFormContainer"
-                android:orientation="vertical"
-                >
+        <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:singleLine="true"/>
 
-            <EditText
-                    android:id="@+id/username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Username"
-                    android:inputType="textEmailAddress"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+        <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
 
-            <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true"/>
 
-                    android:imeOptions="actionUnspecified"
-                    android:inputType="textPassword"
-                    android:maxLines="1"
-                    android:singleLine="true"/>
+        <Button
+                android:id="@+id/btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Hello"
+                />
+    </LinearLayout>
 
-            <Button
-                    android:id="@+id/btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:text="Hello"
-                    />
-        </LinearLayout>
-    </ScrollView>
+    <TextView
+            android:id="@+id/txtSpeechInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
+            android:textColor="@color/white"
+            android:textSize="26dp"
+            android:textStyle="normal" />
 
-</merge>
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="60dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+        <ImageButton
+                android:id="@+id/btnSpeak"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@drawable/ico_mic" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Tap on mic to speak"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                android:textStyle="normal" />
+    </LinearLayout>
+
+</RelativeLayout>
 
