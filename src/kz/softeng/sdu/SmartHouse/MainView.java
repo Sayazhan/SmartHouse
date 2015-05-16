@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,7 +21,9 @@ import android.widget.Toast;
 import android.widget.ViewAnimator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Sayazhan on 06.05.2015.
@@ -30,7 +33,9 @@ public class MainView extends Activity implements RecognitionListener {
     private SpeechRecognizer speech = null;
     private Intent recognizerIntent;
 
-    private boolean svet = false, electro = false, cleanhouse = false, garage = false, doors = false, security = false;
+    private boolean bnewauto=false, notcorrect=false;
+
+    private boolean svet = false, devices = false, cleanhouse = false, garage = false, doors = false, security = false, wifi=false;
 
     private ViewAnimator viewAnimator, viewAnimator1, viewAnimator2, viewAnimator3, viewAnimator4, viewAnimator5, viewAnimator6, viewAnimator7;
 
@@ -39,12 +44,21 @@ public class MainView extends Activity implements RecognitionListener {
 
     private String[] snew, knew;
 
+    private boolean nosuchcommand=false, error=false;
+
     private boolean hello = true;
+
+    //Text To Speech instance
+    private TextToSpeech tts;
 
     @Override
     public void onCreate(Bundle savedInstateState) {
         super.onCreate(savedInstateState);
         setContentView(R.layout.view);
+
+        getActionBar().hide();
+
+        speechaction();
 
         speech = SpeechRecognizer.createSpeechRecognizer(this);
         speech.setRecognitionListener(this);
@@ -53,7 +67,6 @@ public class MainView extends Activity implements RecognitionListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
-
 
         final View touchView = findViewById(R.id.mainView);
         touchView.setOnTouchListener(new View.OnTouchListener() {
@@ -168,10 +181,6 @@ public class MainView extends Activity implements RecognitionListener {
             public void onClick(View view) {
 
                 AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-
-//                AnimationFactory.fadeOut(viewAnimator7);
-//                AnimationFactory.fadeIn(viewAnimator7);
-
             }
         };
 
@@ -240,8 +249,9 @@ public class MainView extends Activity implements RecognitionListener {
         }
          if (snew.length>=4){
             Toast.makeText(getApplication(), "Error", Toast.LENGTH_SHORT).show();
+             error=true;
         }else {
-             if(snew.length==3){
+             if(snew.length==2){
                  knew[2]="";
              }
              if (knew[2].equals("light")) {
@@ -253,16 +263,8 @@ public class MainView extends Activity implements RecognitionListener {
                      AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
                      svet = true;
                  }
-             } else if (knew[2].equals("devices")) {
-                 System.out.println("Find electro");
-                 if (knew[1].equals("off") && electro) {
-                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
-                     electro = false;
-                 } else if (knew[1].equals("on") && !electro) {
-                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
-                     electro = true;
-                 }
-             } else if (knew[1].equals("house")) {
+             } //clean house
+             else if (knew[1].equals("house")) {
                  System.out.println("Find electro");
                  if (knew[2].equals("off") && cleanhouse) {
                      AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
@@ -283,44 +285,88 @@ public class MainView extends Activity implements RecognitionListener {
              } else if (knew[2].equals("doors")) {
                  System.out.println("Find doors");
                  if (knew[0].equals("lock") && doors) {
-                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
                      doors = false;
                  } else if (knew[0].equals("open") && !doors) {
-                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
                      doors = true;
                  }
              } else if (knew[2].equals("security")) {
                  System.out.println("Find security");
                  if (knew[1].equals("off") && security) {
-                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
                      security = false;
                  } else if (knew[1].equals("on") && !security) {
-                     AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
+                     AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
                      security = true;
                  }
-             } else if (knew[2].equals("wifi")) {
-                 System.out.println("Find electro");
-                 if (knew[1].equals("off") && electro) {
-                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                     electro = false;
-                 } else if (knew[1].equals("on") && !electro) {
-                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                     electro = true;
+             } else if (knew[2].equals("WiFi") || knew[2].equals("wifi")) {
+                 System.out.println("Find wifi");
+                 if (knew[1].equals("off") && wifi) {
+                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     wifi = false;
+                 } else if (knew[1].equals("on") && !wifi) {
+                     AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
+                     wifi = true;
                  }
              } else if (knew[2].equals("watts")) {
                  System.out.println("Find electro");
-                 if (knew[1].equals("off") && electro) {
-                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                     electro = false;
-                 } else if (knew[1].equals("on") && !electro) {
-                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                     electro = true;
+                 if (knew[1].equals("off") && devices) {
+                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                     devices = false;
+                 } else if (knew[1].equals("on") && !devices) {
+                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
+                     devices = true;
                  }
+             } else if (knew[2].equals("devices")) {
+                 System.out.println("Find devices");
+                 if (knew[1].equals("off") && devices) {
+                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                     devices = false;
+                 } else if (knew[1].equals("on") && !devices) {
+                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
+                     devices = true;
+                 }
+             }else if(text.equals("open light setting")){
+
+             }
+             else{
+                 nosuchcommand = true;
+                 Toast.makeText(getApplication(), "No such command!", Toast.LENGTH_SHORT).show();
              }
          }
+        speechaction();
         return;
     }
+    private void speechaction() {
+        tts = new TextToSpeech(MainView.this, new TextToSpeech.OnInitListener() {
 
+            @Override
+            public void onInit(int status) {
+
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "UniqueID");
+
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("error", "This Language is not supported");
+                    } else if (!bnewauto) {
+                        tts.speak("Welcome to main menu. What would you like to do?", TextToSpeech.QUEUE_FLUSH, map);
+                        bnewauto = true;
+                    } else if (bnewauto && !notcorrect && !nosuchcommand && !error) {
+                        tts.speak("Roger that.", TextToSpeech.QUEUE_FLUSH, map);
+                    } else if (nosuchcommand || error){
+                        tts.speak("No such command.",TextToSpeech.QUEUE_FLUSH, map);
+                        nosuchcommand=false;
+                        error=false;
+                    }
+                }
+            }
+        });
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -347,17 +393,22 @@ public class MainView extends Activity implements RecognitionListener {
         String errorMessage = getErrorText(i);
         Toast.makeText(getApplication(), "ERROR" + errorMessage, Toast.LENGTH_SHORT).show();
         speech.stopListening();
-
-        speech.destroy();
         hello = true;
-
         System.out.println("Method: onError");
     }
 
+
+
     @Override
     public void onDestroy() {
-        super.onDestroy();
+
         speech.destroy();
+        // Don't forget to shutdown tts!
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
     @Override

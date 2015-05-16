@@ -34,7 +34,7 @@ public class MainActivity extends Activity  {
     private EditText username, password;
     private boolean usernameb = false, passwordb = false;
     private boolean firsttime = true;
-    private boolean bnewauto = false, blogin = false, bpassword = false;
+    private boolean bnewauto = false, notcorrect=false,autorizise=false, blogin = false, bpassword = false;
     private static TextToSpeech tts;
 
     private String[] text1, text2;
@@ -56,6 +56,31 @@ public class MainActivity extends Activity  {
         Parse.initialize(this, "toOhhrlCZ9Gds2sX1JW55Z2r71JIoFiWr6eRba8A",
                 "PlM3Q4Q1EslwcualVJlJdgCTtJTk3bfvCUF9own0");
 
+        speechaction();
+
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+
+        //button onclick
+        Button btn = (Button) findViewById(R.id.btn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplication(), MainView.class));
+                MainActivity.this.overridePendingTransition(android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right);
+            }
+        });
+        ImageButton btn1 = (ImageButton) findViewById(R.id.btnSpeak);
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                promptSpeechInput();
+            }
+        });
+    }
+
+    private void speechaction() {
         tts = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
 
             @Override
@@ -69,34 +94,19 @@ public class MainActivity extends Activity  {
                     if (result == TextToSpeech.LANG_MISSING_DATA ||
                             result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("error", "This Language is not supported");
-                    } else if (bnewauto == false) {
+                    } else if (!bnewauto) {
                         tts.speak("Hello! Do you want to autorizise?", TextToSpeech.QUEUE_FLUSH, map);
                         bnewauto = true;
+                    } else if(bnewauto && !notcorrect){
+                        tts.speak("Please, try again.", TextToSpeech.QUEUE_FLUSH, map);
                     }
                 }
             }
         });
-
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
-
-        //button onclick
-        Button btn = (Button) findViewById(R.id.btn);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplication(), MainView.class));
-            }
-        });
-        ImageButton btn1 = (ImageButton) findViewById(R.id.btnSpeak);
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                promptSpeechInput();
-            }
-        });
     }
+
     private void promptSpeechInput() {
+
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -111,6 +121,8 @@ public class MainActivity extends Activity  {
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+
     /**
      * Receiving speech input
      * */
@@ -169,8 +181,10 @@ public class MainActivity extends Activity  {
                             Toast.makeText(MainActivity.this,
                                     e.getMessage(),
                                     Toast.LENGTH_LONG).show();
+                            speechaction();
                         } else {
-
+                            notcorrect=true;
+                            speechaction();
                             Intent intent = new Intent(
                                     MainActivity.this,
                                     MainView.class);
