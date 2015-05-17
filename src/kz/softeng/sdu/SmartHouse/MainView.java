@@ -55,8 +55,8 @@ public class MainView extends Activity implements RecognitionListener {
     public void onCreate(Bundle savedInstateState) {
         super.onCreate(savedInstateState);
         setContentView(R.layout.view);
-
-        getActionBar().hide();
+//
+//        getActionBar().hide();
 
         speechaction();
 
