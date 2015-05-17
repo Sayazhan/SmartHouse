@@ -191,6 +191,8 @@ public class MainActivity extends Activity  {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
                                     | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
+                            MainActivity.this.overridePendingTransition(android.R.anim.slide_in_left,
+                                    android.R.anim.slide_out_right);
                         }
                     }
                 });

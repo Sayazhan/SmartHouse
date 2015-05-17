@@ -19,5 +19,6 @@
         </activity>
 
         <activity android:name=".MainView"/>
+        <activity android:name=".Devices"/>
     </application>
 </manifest>

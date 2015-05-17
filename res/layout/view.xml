@@ -195,14 +195,6 @@
                         android:scaleType="centerCrop"
                         android:clickable="true"/>
 
-                <ImageView
-                        android:id="@+id/imageView14"
-                        android:src="@drawable/temperatura"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:clickable="true"/>
             </ViewFlipper>
             <ViewFlipper
                     android:id="@+id/viewFlipper7"
@@ -211,21 +203,13 @@
                     android:layout_weight="1">
                 <ImageView
                         android:id="@+id/imageView15"
-                        android:src="@drawable/first"
+                        android:src="@drawable/devices"
                         android:layout_width="110dp"
                         android:layout_height="110dp"
                         android:layout_gravity="center"
                         android:scaleType="centerCrop"
                         android:clickable="true"/>
 
-                <ImageView
-                        android:id="@+id/imageView16"
-                        android:src="@drawable/second"
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
-                        android:layout_gravity="center"
-                        android:scaleType="centerCrop"
-                        android:clickable="true"/>
             </ViewFlipper>
 
         </TableRow>

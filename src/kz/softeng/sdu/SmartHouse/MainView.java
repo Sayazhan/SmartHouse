@@ -40,7 +40,7 @@ public class MainView extends Activity implements RecognitionListener {
     private ViewAnimator viewAnimator, viewAnimator1, viewAnimator2, viewAnimator3, viewAnimator4, viewAnimator5, viewAnimator6, viewAnimator7;
 
     private ImageView imageView1, imageView2, imageView3, imageView4, imageView5, imageView6, imageView7, imageView8, imageView9,
-            imageView10, imageView11, imageView12, imageView13, imageView14, imageView15, imageView16;
+            imageView10, imageView11, imageView12, imageView13, imageView15;
 
     private String[] snew, knew;
 
@@ -113,10 +113,8 @@ public class MainView extends Activity implements RecognitionListener {
         imageView12 = (ImageView) this.findViewById(R.id.imageView12);
 
         imageView13 = (ImageView) this.findViewById(R.id.imageView13);
-        imageView14 = (ImageView) this.findViewById(R.id.imageView14);
 
         imageView15 = (ImageView) this.findViewById(R.id.imageView15);
-        imageView16 = (ImageView) this.findViewById(R.id.imageView16);
 
 
         View.OnClickListener listener = new View.OnClickListener() {
@@ -171,7 +169,6 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
-                AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
 
             }
         };
@@ -180,7 +177,6 @@ public class MainView extends Activity implements RecognitionListener {
             @Override
             public void onClick(View view) {
 
-                AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
             }
         };
 
@@ -212,10 +208,8 @@ public class MainView extends Activity implements RecognitionListener {
         imageView12.setOnClickListener(listener5);
 
         imageView13.setOnClickListener(listener6);
-        imageView14.setOnClickListener(listener6);
 
         imageView15.setOnClickListener(listener7);
-        imageView16.setOnClickListener(listener7);
 
 //        this.findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -309,24 +303,18 @@ public class MainView extends Activity implements RecognitionListener {
                      AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
                      wifi = true;
                  }
-             } else if (knew[2].equals("watts")) {
-                 System.out.println("Find electro");
-                 if (knew[1].equals("off") && devices) {
-                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                     devices = false;
-                 } else if (knew[1].equals("on") && !devices) {
-                     AnimationFactory.flipTransition(viewAnimator6, FlipDirection.LEFT_RIGHT);
-                     devices = true;
+             } else if (knew[1].equals("temperature")) {
+                 System.out.println("Find temperature");
+                 if (knew[0].equals("open")) {
+
                  }
-             } else if (knew[2].equals("devices")) {
+             } else if (knew[1].equals("devices")) {
                  System.out.println("Find devices");
-                 if (knew[1].equals("off") && devices) {
-                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                     devices = false;
-                 } else if (knew[1].equals("on") && !devices) {
-                     AnimationFactory.flipTransition(viewAnimator7, FlipDirection.LEFT_RIGHT);
-                     devices = true;
+                 if (knew[0].equals("open")) {
+
+                     startActivity(new Intent(getApplication(), Devices.class));
                  }
+
              }else if(text.equals("open light setting")){
 
              }
