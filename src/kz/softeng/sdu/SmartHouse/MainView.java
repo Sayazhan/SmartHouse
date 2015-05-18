@@ -176,7 +176,10 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getApplication(), Devices.class));
 
+                MainView.this.overridePendingTransition(android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right);
             }
         };
 
@@ -311,7 +314,6 @@ public class MainView extends Activity implements RecognitionListener {
              } else if (knew[1].equals("devices")) {
                  System.out.println("Find devices");
                  if (knew[0].equals("open")) {
-
                      startActivity(new Intent(getApplication(), Devices.class));
                  }
 
