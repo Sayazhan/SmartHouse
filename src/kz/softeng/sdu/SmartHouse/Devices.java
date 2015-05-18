@@ -8,11 +8,22 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.parse.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Sayazhan on 16.05.2015.
@@ -29,14 +40,38 @@ public class Devices extends Activity {
     private ViewAnimator viewAnimatorNew, viewAnimatorNew1, viewAnimatorNew2, viewAnimatorNew3, viewAnimatorNew4,
             viewAnimatorNew5, viewAnimatorNew6;
     private TextView tv1, tv2, tv3, tv4, tv5, tv6, tv7;
-    private boolean setva;
+
     private boolean[] myArray = new boolean[7];
+
+    private int postion=0;
+
+    private String[] names = new String[7];
+    private int count=0;
+
+    private boolean bnewauto=false, notcorrect=false;
+    private boolean nosuchcommand=false, error=false;
+
+    private boolean tv = false, computer = false, airConditioner = false, music = false, refrigerator = false, stove = false, washingmachine=false;
+
+    private String[] snew, knew;
+
+    private SpeechRecognizer speech = null;
+    private Intent recognizerIntent;
+
+    private AlertDialog.Builder builderSingle;
+
+    private ParseObject devices1;
+    private ParseQuery<ParseObject> query;
+
+    //Text To Speech instance
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adv_animator);
 
+        speechaction();
 
         viewAnimatorNew = (ViewAnimator) this.findViewById(R.id.viewFlipperNew);
         viewAnimatorNew1 = (ViewAnimator) this.findViewById(R.id.viewFlipperNew1);
@@ -75,6 +110,8 @@ public class Devices extends Activity {
         tv6 = (TextView) this.findViewById(R.id.textView6);
         tv7 = (TextView) this.findViewById(R.id.textView7);
 
+        startdevices();
+
         //  Load the custom "appear" animation and create a LayoutTransition
         mAppearAnim = AnimatorInflater.loadAnimator(this, R.animator.custom_appear);
         mLayout = (TableLayout)findViewById(R.id.container1);
@@ -98,7 +135,7 @@ public class Devices extends Activity {
         mAppearBtn = (ImageButton)findViewById(R.id.btnimage);
 
 
-        AlertDialog.Builder builderSingle = new AlertDialog.Builder(
+        builderSingle = new AlertDialog.Builder(
                 Devices.this);
         builderSingle.setIcon(R.drawable.ic_launcher);
         builderSingle.setTitle("Select One Name:-");
@@ -110,8 +147,9 @@ public class Devices extends Activity {
         arrayAdapter.add("AirConditioner");
         arrayAdapter.add("Music");
         arrayAdapter.add("Refrigerator");
-        arrayAdapter.add("Gas");
+        arrayAdapter.add("Stove");
         arrayAdapter.add("WashingMachine");
+        //show devices
         builderSingle.setNegativeButton("cancel",
                 new DialogInterface.OnClickListener() {
 
@@ -120,6 +158,7 @@ public class Devices extends Activity {
                         dialog.dismiss();
                     }
                 });
+        //show open dialog
         mAppearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,6 +166,9 @@ public class Devices extends Activity {
                 builderSingle.show();
             }
         });
+        query = ParseQuery.getQuery("Devices");
+
+        //put devices to layouts
         builderSingle.setAdapter(arrayAdapter,
                 new DialogInterface.OnClickListener() {
 
@@ -139,106 +181,186 @@ public class Devices extends Activity {
                                         "drawable", getPackageName()));
                                 imageViewNew2.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_off" ,
                                         "drawable", getPackageName()));
+                                names[0]=strName.toLowerCase();
                                 viewAnimatorNew.setAlpha(0f);
                                 viewAnimatorNew.setVisibility(View.VISIBLE);
                                 //set text
                                 tv1.setVisibility(View.VISIBLE);
                                 tv1.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
 
                             }else if (viewAnimatorNew1.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew3.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew3.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew4.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[1]=strName.toLowerCase();
                                 viewAnimatorNew1.setAlpha(0f);
                                 viewAnimatorNew1.setVisibility(View.VISIBLE);
                                 //set text
                                 tv2.setVisibility(View.VISIBLE);
                                 tv2.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }else if (viewAnimatorNew2.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew5.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew5.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew6.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[2]=strName.toLowerCase();
                                 viewAnimatorNew2.setAlpha(0f);
                                 viewAnimatorNew2.setVisibility(View.VISIBLE);
                                 //set text
                                 tv3.setVisibility(View.VISIBLE);
                                 tv3.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }else if (viewAnimatorNew3.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew7.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew7.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew8.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[3]=strName.toLowerCase();
                                 viewAnimatorNew3.setAlpha(0f);
                                 viewAnimatorNew3.setVisibility(View.VISIBLE);
                                 //set text
                                 tv4.setVisibility(View.VISIBLE);
                                 tv4.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }else if (viewAnimatorNew4.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew9.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew9.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew10.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[4]=strName.toLowerCase();
                                 viewAnimatorNew4.setAlpha(0f);
                                 viewAnimatorNew4.setVisibility(View.VISIBLE);
                                 //set text
                                 tv5.setVisibility(View.VISIBLE);
                                 tv5.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }else if (viewAnimatorNew5.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew11.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew11.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew12.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[5]=strName.toLowerCase();
                                 viewAnimatorNew5.setAlpha(0f);
                                 viewAnimatorNew5.setVisibility(View.VISIBLE);
                                 //set text
                                 tv6.setVisibility(View.VISIBLE);
                                 tv6.setText(strName);
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }else if (viewAnimatorNew6.getVisibility() == View.GONE && !myArray[which]) {
                                 System.out.println("This is computer");
-                                imageViewNew13.setImageResource(getResources().getIdentifier(strName.toLowerCase()+"_on" ,
+                                imageViewNew13.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_on",
                                         "drawable", getPackageName()));
                                 imageViewNew14.setImageResource(getResources().getIdentifier(strName.toLowerCase() + "_off",
                                         "drawable", getPackageName()));
+                                names[6]=strName.toLowerCase();
                                 viewAnimatorNew6.setAlpha(0f);
                                 viewAnimatorNew6.setVisibility(View.VISIBLE);
                                 //set text
                                 tv7.setVisibility(View.VISIBLE);
                                 tv7.setText(strName);
                                 myArray[which]=true;
+                                query.whereEqualTo("name_of_devices", strName);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    @Override
+                                    public void done(List<ParseObject> list, ParseException e) {
+                                        if (e == null) {
+                                            devices1 = list.get(0);
+                                            devices1.put("added", true);
+                                            devices1.saveInBackground();
+                                        } else {
+                                            Log.d("score", "Error: " + e.getMessage());
+                                        }
+                                    }
+                                });
                             }
                         }
 
                 });
-
-
-//        mAppearBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mImg.getVisibility() == View.GONE) {
-//                    mImg.setAlpha(0f);
-//                    mImg.setVisibility(View.VISIBLE);
-//                } else  if (mImg1.getVisibility() == View.GONE) {
-//                    mImg1.setAlpha(0f);
-//                    mImg1.setVisibility(View.VISIBLE);
-//                } else if (viewAnimatorNew1.getVisibility() == View.GONE){
-//                    viewAnimatorNew1.setAlpha(0f);
-//                    viewAnimatorNew1.setVisibility(View.VISIBLE);
-//                    setva = true;
-//                }
-//            }
-//        });
 
         View.OnClickListener listener = new View.OnClickListener() {
 
@@ -305,7 +427,6 @@ public class Devices extends Activity {
         viewAnimatorNew5.setOnClickListener(listener5);
         viewAnimatorNew6.setOnClickListener(listener6);
 
-
         imageViewNew1.setOnClickListener(listener);
         imageViewNew2.setOnClickListener(listener);
 
@@ -327,6 +448,137 @@ public class Devices extends Activity {
         imageViewNew13.setOnClickListener(listener6);
         imageViewNew14.setOnClickListener(listener6);
 
+    }
+    private void speechaction() {
+        tts = new TextToSpeech(Devices.this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+
+                if (status == TextToSpeech.SUCCESS) {
+                    int result = tts.setLanguage(Locale.US);
+                    HashMap<String, String> map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "UniqueID");
+
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Log.e("error", "This Language is not supported");
+                    } else {
+                        tts.speak("This is device menu. You can add device, then turn on it or off.", TextToSpeech.QUEUE_FLUSH, map);
+                    }
+                }
+            }
+        });
+    }
+    @Override
+    public void onDestroy() {
+
+        speech.destroy();
+        // Don't forget to shutdown tts!
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
+    }
+
+    private void startdevices() {
+
+        query = ParseQuery.getQuery("Devices");
+        query.whereEqualTo("added", true);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> deviceList, ParseException e) {
+                if (e == null) {
+                    Log.d("score", "Retrieved " + deviceList.size() + " scores");
+                    for(int i=0;i<deviceList.size();i++){
+                        devices1 = deviceList.get(i);
+                        String namedevices = devices1.getString("name_of_devices");
+                        int position = devices1.getInt("position")-1;
+                        Log.d("DevicesName:  ", namedevices +"  i");
+                        adddevice(namedevices,position);
+                    }
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
 
     }
+
+    private void adddevice(String namedevices, int position) {
+        if (viewAnimatorNew.getVisibility() == View.GONE){
+            imageViewNew1.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew2.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew.setAlpha(0f);
+            viewAnimatorNew.setVisibility(View.VISIBLE);
+            tv1.setVisibility(View.VISIBLE);
+            tv1.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew1.getVisibility() == View.GONE){
+            imageViewNew3.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew4.setImageResource(getResources().getIdentifier(namedevices.toLowerCase() + "_off",
+                    "drawable", getPackageName()));
+            viewAnimatorNew1.setAlpha(0f);
+            viewAnimatorNew1.setVisibility(View.VISIBLE);
+            tv2.setVisibility(View.VISIBLE);
+            tv2.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew2.getVisibility() == View.GONE){
+            imageViewNew5.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew6.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew2.setAlpha(0f);
+            viewAnimatorNew2.setVisibility(View.VISIBLE);
+            tv3.setVisibility(View.VISIBLE);
+            tv3.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew3.getVisibility() == View.GONE){
+            imageViewNew7.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew8.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew3.setAlpha(0f);
+            viewAnimatorNew3.setVisibility(View.VISIBLE);
+            tv4.setVisibility(View.VISIBLE);
+            tv4.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew4.getVisibility() == View.GONE){
+            imageViewNew9.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew10.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew4.setAlpha(0f);
+            viewAnimatorNew4.setVisibility(View.VISIBLE);
+            tv5.setVisibility(View.VISIBLE);
+            tv5.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew5.getVisibility() == View.GONE){
+            imageViewNew11.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew12.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew5.setAlpha(0f);
+            viewAnimatorNew5.setVisibility(View.VISIBLE);
+            tv6.setVisibility(View.VISIBLE);
+            tv6.setText(namedevices);
+            myArray[position]=true;
+        }else if (viewAnimatorNew6.getVisibility() == View.GONE){
+            imageViewNew13.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_on" ,
+                    "drawable", getPackageName()));
+            imageViewNew14.setImageResource(getResources().getIdentifier(namedevices.toLowerCase()+"_off" ,
+                    "drawable", getPackageName()));
+            viewAnimatorNew6.setAlpha(0f);
+            viewAnimatorNew6.setVisibility(View.VISIBLE);
+            tv7.setVisibility(View.VISIBLE);
+            tv7.setText(namedevices);
+            myArray[position]=true;
+        }
+
+    }
+
 }

@@ -33,8 +33,7 @@
                     android:id="@+id/viewFlipperNew"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew1"
                         android:layout_width="110dp"
@@ -55,8 +54,7 @@
                     android:id="@+id/viewFlipperNew1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew3"
                         android:layout_width="110dp"
@@ -103,8 +101,7 @@
                     android:id="@+id/viewFlipperNew2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew5"
                         android:layout_width="110dp"
@@ -125,8 +122,7 @@
                     android:id="@+id/viewFlipperNew3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew7"
                         android:layout_width="110dp"
@@ -195,8 +191,7 @@
                     android:id="@+id/viewFlipperNew5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew11"
                         android:layout_width="110dp"
@@ -217,8 +212,7 @@
                     android:id="@+id/viewFlipperNew6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:paddingRight="10dp">
+                    android:visibility="gone">
                 <ImageView
                         android:id="@+id/imageViewNew13"
                         android:layout_width="110dp"

@@ -214,20 +214,6 @@ public class MainView extends Activity implements RecognitionListener {
 
         imageView15.setOnClickListener(listener7);
 
-//        this.findViewById(R.id.imageView1).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
-//
-//            }
-//        });
-//        this.findViewById(R.id.imageView2).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
-//
-//            }
-//        });
     }
 
     @Override
@@ -359,6 +345,13 @@ public class MainView extends Activity implements RecognitionListener {
     }
     @Override
     public void onResume() {
+        speech = SpeechRecognizer.createSpeechRecognizer(this);
+        speech.setRecognitionListener(this);
+        recognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_PREFERENCE, "en");
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
         super.onResume();
     }
 
@@ -431,41 +424,41 @@ public class MainView extends Activity implements RecognitionListener {
 
     }
 
-    public static String getErrorText(int errorCode) {
-        String message;
-        switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO:
-                message = "Audio recording error";
-                break;
-            case SpeechRecognizer.ERROR_CLIENT:
-                message = "Client side error";
-                break;
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                message = "Insufficient permissions";
-                break;
-            case SpeechRecognizer.ERROR_NETWORK:
-                message = "Network error";
-                break;
-            case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                message = "Network timeout";
-                break;
-            case SpeechRecognizer.ERROR_NO_MATCH:
-                message = "No match";
-                break;
-            case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                message = "RecognitionService busy";
-                break;
-            case SpeechRecognizer.ERROR_SERVER:
-                message = "error from server";
-                break;
-            case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                message = "No speech input";
-                break;
-            default:
-                message = "Didn't understand, please try again.";
-                break;
+        public static String getErrorText(int errorCode) {
+            String message;
+            switch (errorCode) {
+                case SpeechRecognizer.ERROR_AUDIO:
+                    message = "Audio recording error";
+                    break;
+                case SpeechRecognizer.ERROR_CLIENT:
+                    message = "Client side error";
+                    break;
+                case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                    message = "Insufficient permissions";
+                    break;
+                case SpeechRecognizer.ERROR_NETWORK:
+                    message = "Network error";
+                    break;
+                case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                    message = "Network timeout";
+                    break;
+                case SpeechRecognizer.ERROR_NO_MATCH:
+                    message = "No match";
+                    break;
+                case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                    message = "RecognitionService busy";
+                    break;
+                case SpeechRecognizer.ERROR_SERVER:
+                    message = "error from server";
+                    break;
+                case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                    message = "No speech input";
+                    break;
+                default:
+                    message = "Didn't understand, please try again.";
+                    break;
+            }
+            return message;
         }
-        return message;
-    }
 }
 
