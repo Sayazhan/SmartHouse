@@ -473,8 +473,6 @@ public class Devices extends Activity {
     }
     @Override
     public void onDestroy() {
-
-        speech.destroy();
         // Don't forget to shutdown tts!
         if (tts != null) {
             tts.stop();

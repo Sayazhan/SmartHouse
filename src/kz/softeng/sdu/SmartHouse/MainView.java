@@ -121,6 +121,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView1.isPressed()){
+                    svet=true;
+                }else{
+                    svet=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator, FlipDirection.LEFT_RIGHT);
 
             }
@@ -129,6 +134,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView3.isPressed()){
+                    security=true;
+                }else{
+                    security=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator1, FlipDirection.LEFT_RIGHT);
 
             }
@@ -137,6 +147,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView5.isPressed()){
+                    cleanhouse=true;
+                }else{
+                    cleanhouse=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator2, FlipDirection.LEFT_RIGHT);
 
             }
@@ -145,6 +160,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView7.isPressed()){
+                    garage=true;
+                }else{
+                    garage=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator3, FlipDirection.LEFT_RIGHT);
 
             }
@@ -153,6 +173,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView9.isPressed()){
+                    wifi=true;
+                }else{
+                    wifi=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator4, FlipDirection.LEFT_RIGHT);
 
             }
@@ -161,6 +186,11 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                if(imageView11.isPressed()){
+                    doors=true;
+                }else{
+                    doors=false;
+                }
                 AnimationFactory.flipTransition(viewAnimator5, FlipDirection.LEFT_RIGHT);
 
             }
@@ -169,6 +199,10 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getApplication(), Lights.class));
+
+                MainView.this.overridePendingTransition(android.R.anim.slide_in_left,
+                        android.R.anim.slide_out_right);
 
             }
         };
@@ -295,7 +329,10 @@ public class MainView extends Activity implements RecognitionListener {
              } else if (knew[1].equals("temperature")) {
                  System.out.println("Find temperature");
                  if (knew[0].equals("open")) {
+                     startActivity(new Intent(getApplication(), Temperature.class));
 
+                     MainView.this.overridePendingTransition(android.R.anim.slide_in_left,
+                             android.R.anim.slide_out_right);
                  }
              } else if (knew[1].equals("devices")) {
                  System.out.println("Find devices");
@@ -303,7 +340,13 @@ public class MainView extends Activity implements RecognitionListener {
                      startActivity(new Intent(getApplication(), Devices.class));
                  }
 
-             }else if(text.equals("open light setting")){
+             }else if(knew[1].equals("light")){
+                 if(knew[0].equals("open")) {
+                     startActivity(new Intent(getApplication(), Lights.class));
+
+                     MainView.this.overridePendingTransition(android.R.anim.slide_in_left,
+                             android.R.anim.slide_out_right);
+                 }
 
              }
              else{
