@@ -20,5 +20,6 @@
 
         <activity android:name=".MainView"/>
         <activity android:name=".Devices"/>
+        <activity android:name=".Lights"/>
     </application>
 </manifest>
