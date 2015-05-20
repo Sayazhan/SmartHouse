@@ -23,7 +23,7 @@
                         android:paddingRight="10dp">
                     <ImageView
                             android:id="@+id/imageViewLight1"
-                            android:src="@drawable/turn_off_lights"
+                            android:src="@drawable/turn_on_lights"
                             android:layout_width="170dp"
                             android:layout_height="170dp"
                             android:layout_gravity="left"
@@ -33,7 +33,7 @@
 
                     <ImageView
                             android:id="@+id/imageViewLight2"
-                            android:src="@drawable/turn_on_lights"
+                            android:src="@drawable/turn_off_lights"
                             android:layout_width="170dp"
                             android:layout_height="170dp"
                             android:layout_gravity="left"
@@ -123,7 +123,7 @@
                         android:paddingRight="10dp">
                     <ImageView
                             android:id="@+id/imageViewLight7"
-                            android:src="@drawable/turn_off_lights"
+                            android:src="@drawable/turn_on_lights"
                             android:layout_width="170dp"
                             android:layout_height="170dp"
                             android:layout_gravity="left"
@@ -133,7 +133,7 @@
 
                     <ImageView
                             android:id="@+id/imageViewLight8"
-                            android:src="@drawable/turn_on_lights"
+                            android:src="@drawable/turn_off_lights"
                             android:layout_width="170dp"
                             android:layout_height="170dp"
                             android:layout_gravity="left"

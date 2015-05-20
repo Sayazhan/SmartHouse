@@ -199,7 +199,7 @@ public class MainView extends Activity implements RecognitionListener {
 
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplication(), Lights.class));
+                startActivity(new Intent(getApplication(), Temperature.class));
 
                 MainView.this.overridePendingTransition(android.R.anim.slide_in_left,
                         android.R.anim.slide_out_right);
